@@ -143,6 +143,16 @@ func serveMetrics(location, listen string, options *Options) {
 	}
 
 	http.HandleFunc(location, handler)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+                w.Write([]byte(`<html>
+                <head><title>ZooKeeper Exporter</title></head>
+                <body>
+                <h1>ZooKeeper Exporter</h1>
+                <p><a href='` + location + `'>Metrics</a></p>
+                </body>
+                </html>`))
+        })
+
 	log.Printf("info: serving metrics at %s%s", listen, location)
 	if err := http.ListenAndServe(listen, nil); err != nil {
 		log.Fatalf("fatal: shutting down exporter: %s", err)
